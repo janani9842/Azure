@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --warning: #ffbe0b;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            min-height: 80vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            color: white;
+            padding: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: -70px;
+            right: -70px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -80px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.07);
+        }
+        
+        .logo {
+            padding: 0 30px 30px;
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--warning);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .nav-item {
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background: var(--secondary);
+            border-left: 5px solid var(--warning);
+        }
+        
+        .nav-icon {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 600;
+            margin-left: 15px;
+            cursor: pointer;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .card-text {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .chart-content {
+            height: 250px;
+            background: linear-gradient(135deg, #f6f9fc 0%, #eef2f7 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .geometric-shape {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        .shape-1 {
+            top: 50px;
+            right: 50px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent);
+            opacity: 0.2;
+        }
+        
+        .shape-2 {
+            bottom: 80px;
+            left: 40px;
+            width: 150px;
+            height: 150px;
+            border-radius: 35% 65% 70% 30% / 30% 30% 70% 70%;
+            background: var(--success);
+            opacity: 0.15;
+        }
+        
+        @media (max-width: 900px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 20px;
+            }
+            
+            .nav-items {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .nav-item {
+                padding: 15px;
+            }
+            
+            .nav-item.active {
+                border-left: none;
+                border-bottom: 5px solid var(--warning);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <div>Dash<span>Board</span></div>
+            </div>
+            <div class="nav-items">
+                <div class="nav-item active">
+                    <div class="nav-icon">📊</div>
+                    <div>Dashboard</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📈</div>
+                    <div>Analytics</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👥</div>
+                    <div>Customers</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🛒</div>
+                    <div>Orders</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📦</div>
+                    <div>Products</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <div>Settings</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="page-title">Dashboard Overview</div>
+                <div class="user-profile">
+                    <div>Hello, Alex</div>
+                    <div class="user-avatar">A</div>
+                </div>
+            </div>
+            
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Total Revenue</div>
+                        <div class="card-icon" style="background: var(--primary);">$</div>
+                    </div>
+                    <div class="card-value">$24,265</div>
+                    <div class="card-text">+12% from last month</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Users</div>
+                        <div class="card-icon" style="background: var(--accent);">👥</div>
+                    </div>
+                    <div class="card-value">5,372</div>
+                    <div class="card-text">+8% from last month</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Conversion Rate</div>
+                        <div class="card-icon" style="background: var(--success);">%</div>
+                    </div>
+                    <div class="card-value">4.25%</div>
+                    <div class="card-text">+2.5% from last month</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title">Performance Metrics</div>
+                    <div class="chart-options">Last 6 Months</div>
+                </div>
+                <div class="chart-content">
+                    Interactive Chart Visualization
+                </div>
+            </div>
+            
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Orders</div>
+                        <div class="card-icon" style="background: var(--warning);">📦</div>
+                    </div>
+                    <div class="card-value">1,486</div>
+                    <div class="card-text">+6% from last month</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pending Actions</div>
+                        <div class="card-icon" style="background: var(--secondary);">!</div>
+                    </div>
+                    <div class="card-value">23</div>
+                    <div class="card-text">Needs your attention</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="geometric-shape shape-1"></div>
+    <div class="geometric-shape shape-2"></div>
+</body>
+</html>
